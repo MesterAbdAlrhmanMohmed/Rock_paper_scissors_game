@@ -1,0 +1,76 @@
+from PyQt6 import QtWidgets as qt
+import random
+class main (qt.QMainWindow):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("لعبة حجرة ورقة مقص")        
+        self.user=qt.QListWidget()
+        self.user.addItems(["حجرة","ورقة","مقص"])
+        self.btn=qt.QPushButton("إختيار")
+        self.btn.setDefault(True)
+        self.btn.setShortcut("ctrl+return")
+        self.btn.clicked.connect(self.abcdef)
+        self.إظهار1=qt.QLabel("نتيجة الكمبيوتر")
+        self.pbr=qt.QProgressBar()
+        self.pbr.setAccessibleName("نتيجة الكمبيوتر")
+        self.pbr.setRange(0,10)
+        self.pbr.setValue(0)
+        self.إظهار2=qt.QLabel("نتيجة المستخدم")
+        self.pbu=qt.QProgressBar()
+        self.pbu.setAccessibleName("نتيجة المستخدم")
+        self.pbu.setRange(0,10)
+        self.pbu.setValue(0)
+        self.عن=qt.QPushButton("عن اللعبة")
+        self.عن.setDefault(True)
+        self.عن.clicked.connect(lambda: qt.QMessageBox.information(self,"تنبيه","لإختيار العنصر في اللعبة قم بالضغط على, control زائد enter "))
+        self.حول=qt.QPushButton("حول اللعبة")
+        self.حول.setDefault(True)
+        self.حول.clicked.connect(lambda:qt.QMessageBox.warning(self,"تحذير","تم تطوير تلك اللعبة من قِبَل عبد الرحمن محمد جادالرب, وغير مسموح بوضع أي إسم آخر على الملف"))
+        l=qt.QVBoxLayout()        
+        l.addWidget(self.إظهار1)
+        l.addWidget(self.pbr)
+        l.addWidget(self.إظهار2)
+        l.addWidget(self.pbu)
+        l.addWidget(self.user)
+        l.addWidget(self.btn)
+        l.addWidget(self.عن)
+        l.addWidget(self.حول)
+        w=qt.QWidget()
+        w.setLayout(l)
+        self.setCentralWidget(w)        
+    def abcdef(self):
+        الكمبيوتر=random.choice(["حجرة","ورقة","مقص"])
+        user=self.user.currentItem().text()
+        if الكمبيوتر==user:
+            qt.QMessageBox.information(self,"تنبيه","لقد قام الكمبيوتر والمستخدم بإختيار نفس الإختيار, إذن لم يحصل أحد على نقاط")
+        elif الكمبيوتر=="حجرة" and user=="ورقة":
+            qt.QMessageBox.information(self,"تنبيه","لقد قام الكمبيوتر بإختيار حجر, إذن لقد حصل المستخدم على نقطة")
+            self.pbu.setValue(self.pbu.value()+1)
+        elif الكمبيوتر=="ورقة" and user=="مقص":
+            qt.QMessageBox.information(self,"تنبيه","لقد قام الكمبيوتر بإختيار ورقة,إذن لقد حصل المستخدم على نقطة")
+            self.pbu.setValue(self.pbu.value()+1)
+        elif الكمبيوتر=="مقص" and user=="حجرة":
+            qt.QMessageBox.information(self,"تنبيه","لقد قام الكمبيوتر بإختيار مقص, إذن لقد حصل المستخدم على نقطة")
+            self.pbu.setValue(self.pbu.value()+1)
+        elif الكمبيوتر=="حجرة" and user=="مقص":
+            qt.QMessageBox.information(self,"تنبيه","لقد قام الكمبيوتر بإختيار حجر, إذن لقد حصل الكمبيوتر على نقطة")
+            self.pbr.setValue(self.pbr.value()+1)
+        elif الكمبيوتر=="ورقة" and user=="حجرة":
+            qt.QMessageBox.information(self,"تنبيه","لقد قام الكمبيوتر بإختيار ورقة, إذن لقد حصل الكمبيوتر على نقطة")
+            self.pbr.setValue(self.pbr.value()+1)
+        elif الكمبيوتر=="مقص" and user=="ورقة":
+            qt.QMessageBox.information(self,"تنبيه","لقد قام الكمبيوتر بإختيار مقص, إذن لقد حصل الكمبيوتر على نقطة")
+            self.pbr.setValue(self.pbr.value()+1)
+        if self.pbu.value()==10:
+            qt.QMessageBox.information(self,"تهانينا","لقد فاز المستخدم في تلك الجولة")
+            self.pbr.setValue(0)
+            self.pbu.setValue(0)
+        if self.pbr.value()==10:
+            qt.QMessageBox.information(self,"تنبيه","لقد فاز الكمبيوتر في تلك الجولة")
+            self.pbr.setValue(0)
+            self.pbu.setValue(0)
+app=qt.QApplication([])
+app.setStyle('fusion')
+w=main()
+w.show()
+app.exec()
